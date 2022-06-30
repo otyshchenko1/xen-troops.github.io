@@ -3,14 +3,17 @@
 
 ## Compile QEMU binaries
 > You might want trying the QEMU provided by your OS distribution before building your own
+> If you decide to build your own make sure that pixman devel package is installed (libpixman-1-dev)
 ```sh
 git clone https://github.com/qemu/qemu.git
+cd qemu
 git checkout origin/stable-5.0 --track
 ./configure --target-list=x86_64-softmmu
 make
 ```
 
 ## Get the image for the Domain-0 root file system
+> Make sure that KVM is enabled by bios and appropriate kernel modules (kvm, kvm_intel or kvm_amd) are loaded
 ```sh
 wget https://cloud.debian.org/images/cloud/buster/20210721-710/debian-10-nocloud-amd64-20210721-710.qcow2
 ln -s debian-10-nocloud-amd64-20210721-710.qcow2 dom0.qcow2
