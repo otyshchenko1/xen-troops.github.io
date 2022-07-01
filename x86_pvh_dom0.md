@@ -55,8 +55,12 @@ sudo guestunmount mnt
 
 Update the kernel to more recent one:
 ```sh
+vi /etc/apt/sources.list
+deb http://deb.debian.org/debian buster-backports main contrib non-free
+
 apt update
-apt-get install linux-image-5.10.0-0.bpo.8-amd64 linux-headers-5.10.0-0.bpo.8-amd64 
+apt search linux-image | grep buster-backports
+apt-get install linux-image-5.10.0-0.bpo.15-amd64-unsigned linux-headers-5.10.0-0.bpo.15-amd64
 ```
 
 Create a new user:
@@ -70,6 +74,7 @@ Allow password authentication for sshd:
 ```sh
 vi /etc/ssh/sshd_config
 PasswordAuthentication yes
+
 dpkg-reconfigure openssh-server
 systemctl restart ssh
 ```
