@@ -55,8 +55,12 @@ sudo guestunmount mnt
 
 Update the kernel to more recent one:
 ```sh
+vi /etc/apt/sources.list
+deb http://deb.debian.org/debian buster-backports main contrib non-free
+
 apt update
-apt-get install linux-image-5.10.0-0.bpo.8-amd64 linux-headers-5.10.0-0.bpo.8-amd64 
+apt search linux-image | grep buster-backports
+apt-get install linux-image-5.10.0-0.bpo.15-amd64-unsigned linux-headers-5.10.0-0.bpo.15-amd64 
 ```
 
 Create a new user:
@@ -108,7 +112,7 @@ sudo systemctl enable xen-watchdog.service
 sudo systemctl enable xendriverdomain.service
 ```
 
-Edit /etc/default/grub and update the command line for Xen and the kernel:
+Edit /etc/default/grub and update the command line for Xen and the kernel:type="hvm"
 ```
 GRUB_CMDLINE_LINUX="console=tty0 console=ttyS0,115200 earlyprintk=ttyS0,115200 console=hvc0"
 GRUB_CMDLINE_XEN="iommu=no-sharept,verbose,debug dom0_mem=4096M,max:4096M debug=y loglvl=all guest_loglvl=all com1=115200,8n1 console=com1,vga sync_console_to_ring=true sync_console"
@@ -153,7 +157,7 @@ make -j4 bzImage
 ## Create configuration for Xen guest DomU guest.cfg 
 ```sh
 kernel='linux/arch/x86/boot/bzImage'
-#type="hvm"
+type="hvm"
 name='DomU'
 memory='1024'
 disk= [ 'format=qcow2, vdev=xvda, access=rw, target=domu.qcow2' ]
@@ -162,7 +166,7 @@ vcpus=4
 passthrough="sync_pt"
 pci=["03:00.0,seize=1"] 
 ```
-> Please note, that for PVH Dom0 PCI passthrough is not supported, so the last to lines of the configuration need to be commented.
+> Please note, that for PVH Dom0 PCI passthrough is not supported, so the last two lines of the configuration need to be commented as well as type="hvm".
 
 ## Run the guest
 ```sh
